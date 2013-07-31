@@ -1,0 +1,22 @@
+/* szepsegapolas */
+
+body { background-color: #eef; }
+body, td, input, textarea { font-size: 10pt;margin: 5px;font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;}
+h1,h2,h3 {font-family: "Century Schoolbook", Georgia, Times, serif;color: #333; letter-spacing: -1px;}
+input, select, textarea { border: 1px solid silver; padding-left: 2px; background-color: #ffd; }
+fieldset { border: 1px solid black; background-color: #efe; }
+fieldset legend { font-weight: bold; }
+a, a:visited { color: blue; text-decoration: none; } a:hover { text-decoration: underline; }
+p.error,p.message { padding: 0.1em 0 0.1em 0.5em; border: 1px solid silver; margin-right: 1em; }
+p.error { background-color: #fdd; } p.message { background-color: #efc; }
+
+.keret, table.keret td, table.keret th {border: 1px solid silver;}
+table.keret { border-spacing: 0; }
+table.keret td, table.keret th { padding: 1px 2px 1px 5px; }
+table.keret th { background-color: #444; color: white; }
+
+.opa50 { -moz-opacity:.50; filter:alpha(opacity=50); opacity:.50; }
+
+@media screen {
+  h1 {text-shadow: 15px 5px 5px #CCC, -1px -1px 2px white, 1px 1px 1px #333;}
+}
