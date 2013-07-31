@@ -6,7 +6,7 @@ PHP libs to shorten coding time. Look into subfolders for details.
 
 misc
 ----
-	Miscellenous functions and classes
+	Miscellaneous functions and classes
 
 
 zsdb2
