@@ -46,7 +46,7 @@ class ZSXHTML {
     $this->html = &$this->X;
     $this->head = &$this->X->head;
     $this->body = &$this->X->body;
-    $this->addmetaname("generator", "zsxhtml @ ZsPHPlibs (http://sourceforge.net/projects/zsphplibs/)");
+    $this->addmetaname("generator", "zsxhtml @ ZsPHPlibs (http://github.com/ZsBT/)");
     $this->addmetaname("viewport", "width=device-width, initial-scale=1, maximum-scale=1");
     return $this->X;
   }

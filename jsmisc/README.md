@@ -1,15 +1,9 @@
-zsphplibs
-=========
+jsmisc
+======
 
-PHP libs to shorten coding time. Look into subfolders for details.
-
-
-misc
-----
-	Miscellenous functions and classes
+JavaScript functions and jQuery extensions.
 
 
-zsdb2
------
-	Simple database layer over different servers
-
+jQueryExt.js
+------------
+	Contains additional jQuery functions that helps handling nodes data
