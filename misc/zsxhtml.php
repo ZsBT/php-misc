@@ -37,7 +37,7 @@ class ZSXHTML {
   var $X;
 
   function __construct($sxe=0) {
-    $this->X=($sxe ? $sxe : new zsxe("<html/>"));
+    $this->X=( ($sxe===0) ? new zsxe("<html/>"):$sxe );
     $this->X["xmlns"]="http://www.w3.org/1999/xhtml";
     $this->X->head->title='';
     $m=&$this->X->head->meta;
@@ -47,7 +47,7 @@ class ZSXHTML {
     $this->head = &$this->X->head;
     $this->body = &$this->X->body;
     $this->addmetaname("generator", "zsxhtml @ ZsPHPlibs (http://github.com/ZsBT/)");
-    $this->addmetaname("viewport", "width=device-width, initial-scale=1, maximum-scale=1");
+    $this->addmetaname("viewport", "width=device-width, initial-scale=1");
     return $this->X;
   }
 
