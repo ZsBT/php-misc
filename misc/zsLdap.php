@@ -8,7 +8,7 @@
 class zsldap {
   var $queryName, $queryPass;	// the user to bind with - optional if you use login (will set)
   
-  function __construct($domain,$svr=false,$DN=false){
+  function __construct($domain,$svr=false,$DN=false){	/* if server and DN are false, will be set based on domain (FDQN) */
     if(false===$svr)$svr=$domain;
     if(false===$DN)$DN="DC=".str_replace(".",",DC=",$domain);
     $this->svr=$svr;$this->domain=$domain;$this->DN=$DN;

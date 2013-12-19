@@ -30,6 +30,11 @@ class zsxe extends simplexmlelement {
     $o->p='no flash plugin in your browser';
   }
   
+  public function addCData($cdata_text) {
+    $node = dom_import_simplexml($this); 
+    $no   = $node->ownerDocument; 
+    $node->appendChild($no->createCDATASection($cdata_text)); 
+  } 
 }
 
 
@@ -37,7 +42,7 @@ class ZSXHTML {
   var $X;
 
   function __construct($sxe=0) {
-    $this->X=( ($sxe===0) ? new zsxe("<html/>"):$sxe );
+    $this->X=(($sxe===0) ? new zsxe("<html/>"):$sxe );
     $this->X["xmlns"]="http://www.w3.org/1999/xhtml";
     $this->X->head->title='';
     $m=&$this->X->head->meta;
