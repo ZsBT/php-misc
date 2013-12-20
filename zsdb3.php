@@ -1,6 +1,26 @@
 <?php /*
 	20102-2013 (c) [Z]sombor's [S]imple [D]ata[B]ase	v3.0
 	
+	usage:
+	
+	$db = new zsdb3($connspec);
+	
+
+	for psql, mysql, mysqli, mssql,  connspec syntax is :
+	
+	type::dbname@host[:port][/user:password]
+	
+	eg: mysqli::mydb@localhost/username:s3cr3tp@ss
+	
+
+	for sqlite, connspec is:
+	
+	sqlite::/path/to/sqlite3.db
+	
+	
+	for oracle, connspec is:
+	
+	oracle::username/password@tns_string
 */
 
 
@@ -12,31 +32,36 @@ class zsdb3 {
     ,$FERRF="\n<pre>zsdb3: %s</pre>\n"	/* fatal error message format */
     ,$in_transaction = false
     ;
-  function __construct($dbspec){		/* format: type::dbname@host[:port][/user:password] or sqlite::filename */
-    if(preg_match('/(.+)::(.+)@([a-z0-9_\.-]+)(?::(\d+))?(?:\/([a-z0-9-_\.]+):(.*))?/i', $dbspec, $ma));else
+  function __construct($dbspec,$encoding="UTF8"){		/* format: type::dbname@host[:port][/user:password] or sqlite::filename */
     if(preg_match('/(sqlite3)::(.+)/i', $dbspec, $ma));else
+    if(preg_match('/(oracle)::([a-z0-9_]+)\/([.+]+)@(.+))/i', $dbspec, $ma));else
+    if(preg_match('/(.+)::(.+)@([a-z0-9_\.-]+)(?::(\d+))?(?:\/([a-z0-9_\.]+:.*))?/i', $dbspec, $ma));else
       return $this->fatal("Wrong db spec: '$dbspec'");
-
+      
     $fn = sprintf("%s/zsdb3/%s.class.php", __DIR__, $type=$ma[1]);
     if(!file_exists($fn))$this->fatal("Module '$type' not found ($fn) ");
 
     require_once "$fn";
     $class = "zsdb3_$type";
     
-    $host = isset($ma[3])? $ma[3]:'localhost';
+    list($spec, $type, $dbname, $host, $port, $userpass)=$ma;
+    if(preg_match('/([a-z0-9_\.]+):(.*)/i',$userpass,$ma1)&& array_shift($ma1))list($user,$pass)=$ma1;
     
     switch($type){
-      case 'psql':
-      case 'mysql':
-      case 'mssql':
-        $D = new $class($host, $ma[4], $ma[2], $ma[5], $ma[6]);
-        break;
       case 'sqlite3':
         $D = new $class($ma[2]);
+        break;
+      case 'psql':
+      case 'mysql':
+      case 'mysqli':
+      case 'mssql':
+        $D = new $class($host, $port, $dbname, $user, $pass);
         break;
       default:
         $this->fatal("$type not supported yet");
     }
+    
+    $D->set_encoding($encoding);
   
     if(!$D)$this->fatal("Error connecting to $type database");
     $this->D = &$D;
@@ -49,7 +74,7 @@ class zsdb3 {
   /* insert. returns the new id if available */
   function i($t,$datarr){return $this->D->insert($t,$datarr);}
   
-  /* update. returns updated rows */
+  /* update. returns updated rows if available */
   function u($table,$datarr,$cond=0){return $this->D->update($table,$datarr,$cond);}
   
   function iou($t, $datarr, $conda) {	/* update if $cond has rows, else insert */

@@ -8,6 +8,7 @@ class zsdb3_oracle {
   function __construct($TNS, $DBUSER, $DBPASS) { 
     $this->CONN=0;
     $RETRY=5;
+    if(!function_exists("oci_connect"))die("Oracle instant client is not installed.");
     while( (!$this->CONN) && ($RETRY--) ) if ($conn=oci_connect($DBUSER,$DBPASS,$TNS,"AL32UTF8")) $this->CONN=$conn; else sleep(1);
     if(!$this->CONN){$e = oci_error();if($this->DEBUGMODE)printf(ZSDB_ERRF,'',htmlentities($e['message']));return;}
     $this->exec("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD'");
