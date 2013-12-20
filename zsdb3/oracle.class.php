@@ -33,5 +33,31 @@ class zsdb3_oracle {
   function fn($R,$i)	{ return oci_field_name($R,$i);}
   function free($R)	{ if ($this->DEBUGMODE) echo "free\n"; return oci_free_statement($R); }
 
-}
+  function ora_escape($data) {return sprintf("'%s'", str_replace("'","`",$data) );}
+  
+  function insert($table, $datarr) {
+    if(!$table)return false;
+    if(!$datarr)return false ;
+    
+    foreach($datarr as $k=>$v){
+      $ka[]=$k;
+      $va[]=$this->ora_escape($v);
+    }
+    $Q = sprintf("insert into $table (%s) values (%s)", implode(',',$ka), implode(',',$va) );
+	return $this->exec($Q);
+  }
 
+  function update($table, $datarr, $cond=0 ) {
+    if(!$table)return false;
+    if(!$datarr)return false;
+    if(!$cond)return false;	// uncomment if brave
+    
+    foreach($datarr as $k=>$v)
+      $seta[]="$k=".$this->ora_escape($v);
+    
+    $Q = "update $table set ".implode(",",$seta);
+    if($cond)$Q.=" where $cond";
+    
+    return $this->exec($Q);
+  }
+}

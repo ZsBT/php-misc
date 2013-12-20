@@ -10,6 +10,7 @@ class zsdb3_mysql {
     if ($DBPORT) $DBHOST .= ':' . $DBPORT ;
     if (!$this->CONN = mysql_connect($DBHOST, $DBUSER, $DBPASS)) die ('MySQL: db connect error: '.mysql_error()) ;
     if (!mysql_select_db($DBNAME, $this->CONN)) die ("MySQL: error selecting db $DBNAME: ".$DBNAME) ;
+    
   }
   function exec($Q) { $ret = mysql_query($Q, $this->CONN); if ($this->DEBUGMODE && !$ret ) printf(ZSDB_ERRF, $Q, mysql_error() ); return $ret;}
   function query($Q)	{ return $this->exec($Q) ; }
@@ -23,5 +24,37 @@ class zsdb3_mysql {
   function fn($R,$i)	{ return mysql_field_name($R,$i); }
   function free($R)	{ return mysql_free_result($R); }
 
+  function mysql_escape($data) {
+      return sprintf("'%s'", str_replace("'","`",$data) );
+      if(is_numeric($data))return $data;
+      $unpacked = unpack('H*hex', $data);
+      return '0x' . $unpacked['hex'];
+  }
+  
+  function insert($table, $datarr) {
+    if(!$table)return false;
+    if(!$datarr)return false ;
+    
+    foreach($datarr as $k=>$v){
+      $ka[]=$k;
+      $va[]=$this->mysql_escape($v);
+    }
+    $Q = sprintf("insert into $table (%s) values (%s)", implode(',',$ka), implode(',',$va) );
+	return $this->exec($Q);
+  }
+
+  function update($table, $datarr, $cond=0 ) {
+    if(!$table)return false;
+    if(!$datarr)return false;
+    if(!$cond)return false;	// uncomment if brave
+    
+    foreach($datarr as $k=>$v)
+      $seta[]="$k=".$this->mysql_escape($v);
+    
+    $Q = "update $table set ".implode(",",$seta);
+    if($cond)$Q.=" where $cond";
+    
+    return $this->exec($Q);
+  }
 }
 

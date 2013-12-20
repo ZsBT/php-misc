@@ -18,6 +18,10 @@ class zsdb3_psql {
     $this->cstr=$cstr;
     $this->connect();
   }
+  function set_encoding($cs){
+    pg_set_client_encoding($this->CONN, $cs);
+  }
+  
   function connect(){return $this->CONN = pg_pconnect($this->cstr) ;}
   function exec($Q,$debugcall=0) {
     if($this->SCHEMA)$Q="set search_path to {$this->SCHEMA};$Q ";
