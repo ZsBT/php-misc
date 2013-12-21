@@ -1,5 +1,5 @@
-zsdb2
-=====
+zsdb2 (depricated, keeping for compatibility reasons. please use zsdb3
+======================================================================
 
 PHP libs to connect to various databases easily
 -----------------------------------------------
