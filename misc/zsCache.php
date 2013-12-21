@@ -1,7 +1,8 @@
 <?php /*
 
 	(c) Zsombor simple cache class with methods set and get				*/
-	
+
+#	uses the temporary filesystem	
 
 class zsCache {
   private function fnbykey($key){return $this->PF.md5($key);}
