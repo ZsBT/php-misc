@@ -3,6 +3,8 @@
 	
 	usage:
 	
+	include "zsdb3.php";
+	
 	$db = new zsdb3($connspec);
 	
 
