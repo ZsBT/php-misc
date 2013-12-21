@@ -12,7 +12,7 @@ class zsdb3_mysql {
     if (!mysql_select_db($DBNAME, $this->CONN)) die ("MySQL: error selecting db $DBNAME: ".$DBNAME) ;
     
   }
-  function exec($Q) { $ret = mysql_query($Q, $this->CONN); if ($this->DEBUGMODE && !$ret ) printf(ZSDB_ERRF, $Q, mysql_error() ); return $ret;}
+  function exec($Q) { return mysql_query($Q, $this->CONN); }
   function query($Q)	{ return $this->exec($Q) ; }
   function close()	{ return mysql_close($this->CONN) ; }
   function fa($R)	{ return mysql_fetch_array($R) ; }
