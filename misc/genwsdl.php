@@ -1,6 +1,8 @@
 #!/usr/bin/php5
 <?
 
+#       creates a WSDL file as defined below to standard output.
+
 define("DEFNS", "bahwsdl");		// default namespace
 define("SCHNS", "BW");			// schema namespace
 

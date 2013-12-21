@@ -1,6 +1,6 @@
 <?php /*
 
-  D E P R I C A T E D  -  U S E   Z S D B 2   I N S T E A D
+  D E P R I C A T E D  -  U S E   Z S D B 3   I N S T E A D
   
 
 	2010 (c) Zsombor's [S]imple [D]ata[B]ase	v2.6

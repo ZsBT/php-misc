@@ -1,6 +1,8 @@
 <?php
 #
-#	for VT100 terminal!
+#	for VT100 compatible terminal!
+#
+# colors and control characters for your php cli script.
 #
 
 function AnsiSTR( $str, $opta=array() ) {
