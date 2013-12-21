@@ -10,6 +10,7 @@
     $x->addcss("nicebasic.css");
     $x->addjs("hello.js");
     echo $x->asxml();
+    
 
 */
 
