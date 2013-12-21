@@ -18,12 +18,13 @@ class zsdb3_psql {
     $this->cstr=$cstr;
     $this->connect();
   }
+  function set_encoding($cs){pg_set_client_encoding($this->CONN, $cs);}
+  
   function connect(){return $this->CONN = pg_pconnect($this->cstr) ;}
-  function exec($Q,$debugcall=0) {
+  function exec($Q) {
     if($this->SCHEMA)$Q="set search_path to {$this->SCHEMA};$Q ";
     if(!$this->CONN)$this->connect();
     $ret = pg_query($this->CONN, $Q) ;
-    if (($this->SHOWERROR && !$ret ) || ($this->DEBUGMODE) ) {echo ($errS = sprintf($this->ERRF, $Q, pg_last_error() ));}
     return $ret;
   }
   function query($Q)	{ return $this->query($this->CONN,$Q) ; }

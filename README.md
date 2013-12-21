@@ -14,5 +14,8 @@ misc
 
 zsdb2
 -----
-	Simple database layer over different servers
+	Simple database layer over different servers (obsolete, user zsdb3 instead)
 
+zsdb3
+-----
+	Much more simple database layer
