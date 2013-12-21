@@ -6,7 +6,7 @@
 	$db = new zsdb3($connspec);
 	
 
-	for psql, mysql, mysqli, mssql,  connspec syntax is :
+	for psql, mysql, mysqli, mssql, oracle, connspec syntax is :
 	
 	type::dbname@host[:port][/user:password]
 	
