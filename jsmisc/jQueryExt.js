@@ -21,3 +21,11 @@ return c};
 $.fn.disable=function(){$(this).attr("disabled",true);};
 $.fn.enable=function(){$(this).removeAttr("disabled");};
 
+/* visible in scrolled parent? */
+$.fn.isScrolledIntoView=function(){
+    var docViewTop = $(window).scrollTop()
+        , docViewBottom = docViewTop + $(window).height()
+        ,elemTop = $(this).offset().top
+        ,elemBottom = elemTop + $(this).height();
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+}
