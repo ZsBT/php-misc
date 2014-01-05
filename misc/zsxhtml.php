@@ -28,7 +28,12 @@ class zsxe extends simplexmlelement {
     $o['data']=$url;$o['width']=$width;$o['height']=$height;
     $p=&$o->param[];$p['name']='loop';$p['value']='true';
     $p=&$o->param[];$p['name']='movie';$p['value']=$url;
-    $o->p='no flash plugin in your browser';
+    $o->embed="";
+    $o->embed['src']=$url;
+    $o->embed['type']="application/x-shockwave-flash";
+    $o->embed['width']=$width;
+    $o->embed['height']=$height;
+    return $o;
   }
   
   public function addCData($cdata_text) {
