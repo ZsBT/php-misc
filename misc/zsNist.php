@@ -2,9 +2,12 @@
 
 	NIST class to handle ANSI/NIST fingerprint data
 	
-	(c) 2014 Zsombor
-
-
+	  For details, see: http://fingerprint.nist.gov/
+	
+	
+	
+	(c) 2014 kalo@zsombor.net
+	
 
 
 class synopsis
@@ -13,17 +16,19 @@ class synopsis
 	$data[1] is type-1 record
 	$data[2] is type-2 record
 	$data[4] is type-4 record
-	
-  public function readfile($fn)        // reads a NIST fingerprint file to structured $data 
-  public function read($s)     // read NIST fp data from string
-  public function build()      // builds the NIST file and returns as string (ANSI/NIST format)
 
-
-
-
-	
+  public function readfile($fn){        // reads a NIST fingerprint file to structured $this->data 
+  public function read($s){     // read NIST fingerprint from binary string to structured $this->data 
+  public function build(){      // builds the NIST file from $this->data and returns as binary string 
+  public function explode(){    // print loaded nist data to stdout and save images to files
 	                                                                                */
+
+
+
+
+
 /* separator characters */
+
 define("NIST_FS", "\x1C");
 define("NIST_GS", "\x1D");
 define("NIST_RS", "\x1E");
@@ -31,14 +36,14 @@ define("NIST_US", "\x1F");
 
 
 class zsNist {
-  public $data=false;	/* the structured data */
+  public $data=false;	// the structured data 
   
-  public function readfile($fn){	/* reads a NIST fingerprint file to structured data */
+  public function readfile($fn){	// reads a NIST fingerprint file to structured $this->data 
     if(!$s=file_get_contents($fn))die("no such file: $fn\n");
     return $this->read($s);
   }
   
-  public function read($s){	/* read type-1, type-2 and type-4 records */
+  public function read($s){	// read NIST fingerprint from binary string to structured $this->data 
     $reca = explode(NIST_FS, $s);
     $t1s=array_shift($reca);
     $t2s=array_shift($reca);
@@ -58,7 +63,7 @@ class zsNist {
     return $this->data = &$type;
   }
   
-  private function shiftT4(&$t4s){	/* reads next type-4 data */
+  private function shiftT4(&$t4s){	// reads next type-4 data 
     if(!strlen($t4s))return false;
     $ret = array();
     $ret[1] = $size=$this->readnum($t4s, 1, 4);
@@ -74,13 +79,13 @@ class zsNist {
     return $ret;
   }
   
-  private function readnum(&$bin, $start, $len=1){	/* reads unsigned positive number from binary data */
+  private function readnum(&$bin, $start, $len=1){	// reads unsigned positive number from binary data 
     $ss = substr($bin, $start-1, $i=$len);
     while(strlen($ss)<4)$ss=chr(0).$ss;
     $numa = unpack("N",$ss);return $numa[1];
   }
   
-  private function makenum($num, $len=1){		/* creates number as binary string */
+  private function makenum($num, $len=1){		// creates number as binary string 
     switch($len){
       case 1:
         return pack("C", $num);
@@ -92,29 +97,30 @@ class zsNist {
     return false;
   }
   
-  private function concat($tn, &$record){	/* imploding a type-1 or type-2 record */
+  private function concat($tn, &$record){	// imploding a type-1 or type-2 record to binary string
     $reta = array();
     foreach($record as $k=>$v)
       $reta[]=sprintf("%d.%03d:%s", $tn, $k, $v);
     $ret = implode(NIST_GS,$reta);
-    $len=1+strlen($ret);	/* +1 because of FS */
+    $len=1+strlen($ret);	// +1 because of FS 
     $rlen = &$record[1];
-    if($len!=$rlen){	/* in case of size needs to be corrected */
+    if($len!=$rlen){	// in case of size needs to be corrected 
       $rlen=$len;
       return $this->concat($tn,$record);
     }
     return $ret;
   }
   
-  public function build(){	/* builds the NIST file and returns as string */
+  public function build(){	// builds the NIST file from $this->data and returns as binary string 
+    if(!$this->data)return false;
     $type = &$this->data;
     $idca=array();
     
-    /* type-2 */
+    // type-2 
     $idca[]="2".NIST_US."00";
     $t2s = $this->concat(2,$type[2]);
     
-    /* type-4 */
+    // type-4 
     $t4s="";
     foreach($type[4]as $i=>$t4){
       $idc = 1+$i;
@@ -131,14 +137,33 @@ class zsNist {
         ;
     }
     
-    /* type-1 */
+    // type-1 
     $type[1][2] = "0300";
-    $type[1][3] = "1".NIST_US.count($idca).NIST_RS.implode(NIST_RS, $idca);	/* CNT */
+    $type[1][3] = "1".NIST_US.count($idca).NIST_RS.implode(NIST_RS, $idca);	// CNT 
     $type[1][5] = date("Ymd");
     $t1s = $this->concat(1,$type[1]);
     
     return $t1s.NIST_FS.$t2s.NIST_FS.$t4s;
   }
+
+  public function explode(){	// print loaded nist data to stdout and save images to files
+    if(!$this->data)return false;
+    $ret="";
+    foreach(array(1,2)as $ri)foreach($this->data[$ri] as $field=>$data){
+        $ret.=sprintf("%d.%03d=%s\n", $ri, $field, $data);
+    }
+    
+    foreach($this->data[4] as $record)
+      foreach($record as $field=>$data){
+        if($field==9){	// 4.009 is the binary data 
+          file_put_contents($fn=sprintf("finger_%d.wsq", $record[4]), $data);
+          $data=$fn;
+        }
+        $ret.=sprintf("4.%03d=%s\n", $field, $data);
+      }
+    echo $ret;
+    return $ret;
+  }
+  
   
 }
-
