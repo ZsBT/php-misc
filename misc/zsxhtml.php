@@ -92,10 +92,11 @@ class ZSXHTML {
     return $css;
   }
 
-  public function addjs($uri){
+  public function addjs($uri,$async=false){
     $js=$this->head->addChild("script",' ');
     $js["type"]="text/javascript";
     $js["src"]=$uri;
+    if($async)$js["async"]="async";
     return $js;
   }
   
