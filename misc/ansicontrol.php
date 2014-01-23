@@ -5,12 +5,10 @@
 # colors and control characters for your php cli script.
 #
 
-function AnsiSTR( $str, $opta=array() ) {
+function AnsiSTR( $str, $opts='' ) {
   $E = "\x1b";
-  
   $ca=array();
-  if (!is_array($opta)) $opta = array($opta);
-  foreach ($opta as $opt) switch($opt) {
+  foreach (explode(",",$opts) as $opt) switch($opt) {
     case "RSET": $ca[]="[0m";	break;	//	reset; clears all colors and styles (to white on black)
     case "b":	$ca[]="[1m";	break;	//	bold on (see below)
     case "i":	$ca[]="[3m";	break;	//	italics on
