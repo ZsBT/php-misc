@@ -38,8 +38,12 @@ class zsdb3 {
     require_once "$fn";
     $class = "zsdb3_$type";
     
-    list($spec, $type, $dbname, $host, $port, $userpass)=$ma;
-    if(preg_match('/([a-z0-9_\.]+):(.*)/i',$userpass,$ma1)&& array_shift($ma1))list($user,$pass)=$ma1;
+    if($type=="sqlite3")
+      list($spec, $type, $dbname)=$ma;
+    else {
+      list($spec, $type, $dbname, $host, $port, $userpass)=$ma;
+      if(preg_match('/([a-z0-9_\.]+):(.*)/i',$userpass,$ma1)&& array_shift($ma1))list($user,$pass)=$ma1;
+    }
     
     switch(strtolower($type)){
       case 'sqlite3':
@@ -65,7 +69,6 @@ class zsdb3 {
     if(!$D)$this->fatal("Error connecting to $type database");
     $this->D = &$D;
     return $D;
-    
   }
   
   function sql_escape($data) {
@@ -127,6 +130,10 @@ class zsdb3 {
   function commit(){ $this->in_transaction=false; return $this->exec("commit");}
   function rollback(){ $this->in_transaction=false; return $this->exec("rollback");}
   
-  public function __call($method, $args){return $this->D->$method($args[0],$args[1]) ;}		/* for a function in specific class */
+  private function fatal($msg){die("\n\tZSDB3: Fatal error: $msg\n\n");}
+  
+  public function __call($method, $args){	// for a function in specific class
+    return call_user_func_array(array($this->D,$method), $args);
+  }
   
 }

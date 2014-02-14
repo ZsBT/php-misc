@@ -11,7 +11,7 @@ class zsdb3_sqlite3 {
   function query($Q) { return $this->CONN->query($Q); }
   function exec($Q) { return $this->CONN->exec($Q); }
   function close() { return $this->CONN->close(); }
-  function fa($R, $restype=SQLITE3_ASSOC ) { return $R->fetchArray($restype); }
+  function fa($R, $restype=SQLITE3_ASSOC ) { return $R? $R->fetchArray($restype): false; }
   function faa($R) { return $this->fa($R, SQLITE3_ASSOC); }
   function fan($R) { return $this->fa($R, SQLITE3_NUM); }
   function fo($R){$fa = $this->faa($R);if($fa)return (object)$fa;return FALSE; } 
