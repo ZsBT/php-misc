@@ -27,7 +27,7 @@ class zsdb3_psql {
     $ret = pg_query($this->CONN, $Q) ;
     return $ret;
   }
-  function query($Q)	{ return $this->query($this->CONN,$Q) ; }
+  function query($Q)	{ return $this->exec($Q) ; }
   function close()	{ return pg_close($this->CONN) ; }
   function fa($R)	{ return pg_fetch_array($R) ; }
   function faa($R)	{ return pg_fetch_array($R,NULL,PGSQL_ASSOC); }
