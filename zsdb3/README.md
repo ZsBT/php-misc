@@ -18,5 +18,29 @@ $db = new zsdb3($connspec);
 
 	sqlite::/path/to/sqlite3.db
 
+## Class synopsys
+
+### Store methods
+```php
+  public function insert($table, $datarr) {	/* inserts an array-specified row to a table */
+  public function i($table,$datarr)	/* alias for insert() */
+  public function update($table, $datarr, $cond="" ) { /* updates a row */
+  public function u($table,$datarr,$cond=0) /* alias for update() */
+  public function iou($t, $datarr, $cond=0) {	/* deletes then inserts a row */
+```
+### Query methods
+```php
+  public function Q($query) { /* Query one field of one row. returns a simple value */
+  public function QFO($query) /* queries the first row then returns as an object */
+  public function QFA($query) /* queries the first row then returns as an array */
+  public function QA($query) /* queries one field of several rows */
+  public function QAA($query) /* queries array of rows, elements are associated array of fields */
+  public function QOA($query) /* queries array of rows, elements are objects of fields */
+### Transaction handling
+```php
+  public function btrans() /* begin transaction */
+  public function commit() /* commit transaction */
+  public function rollback() /* rollback transaction */
+```
 ---
 2012-2013
