@@ -11,7 +11,7 @@ $db = new zsdb3($connspec);
 
 #### psql, mysql, mysqli, mssql, oracle
 
-	Syntax:
+	Connspec syntax is:
 	dbtype::dbname@host[:port][/user:password]
 	
 	Mysql example:
@@ -19,9 +19,9 @@ $db = new zsdb3($connspec);
 
 #### sqlite3
 
-	sqlite::/path/to/sqlite3.db
+	sqlite3::/path/to/sqlite3.db
 
-## Class synopsys
+## Class synopsis
 
 ### Store methods
 ```php
@@ -29,7 +29,7 @@ $db = new zsdb3($connspec);
   public function i($table,$datarr)	/* alias for insert() */
   public function update($table, $datarr, $cond="" ) { /* updates a row */
   public function u($table,$datarr,$cond=0) /* alias for update() */
-  public function iou($t, $datarr, $cond=0) {	/* deletes then inserts a row */
+  public function iou($t, $datarr, $cond=0) {	/* insert-or-update: deletes then inserts a row */
 ```
 ### Query methods
 ```php
@@ -38,7 +38,7 @@ $db = new zsdb3($connspec);
   public function QFA($query) /* queries the first row then returns as an array */
   public function QA($query) /* queries one field of several rows */
   public function QAA($query) /* queries array of rows, elements are associated array of fields */
-  public function QOA($query) /* queries array of rows, elements are objects of fields */
+  public function QOA($query) /* queries array of rows, elements are object of fields */
 ```
 ### Transaction handling
 ```php
