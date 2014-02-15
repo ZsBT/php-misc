@@ -11,8 +11,11 @@ $db = new zsdb3($connspec);
 
 #### psql, mysql, mysqli, mssql, oracle
 
-	type::dbname@host[:port][/user:password]
-	eg: mysqli::mydb@localhost/username:s3cr3tp@ss
+	Syntax:
+	dbtype::dbname@host[:port][/user:password]
+	
+	Mysql example:
+	mysqli::mydb@localhost/username:s3cr3tp@ss
 
 #### sqlite3
 
@@ -36,6 +39,7 @@ $db = new zsdb3($connspec);
   public function QA($query) /* queries one field of several rows */
   public function QAA($query) /* queries array of rows, elements are associated array of fields */
   public function QOA($query) /* queries array of rows, elements are objects of fields */
+```
 ### Transaction handling
 ```php
   public function btrans() /* begin transaction */
