@@ -5,12 +5,13 @@
 
 */
 class zsdb3_oracle {
-  function __construct($TNS, $DBUSER, $DBPASS) { 
+  function __construct($TNS, $DBUSER, $DBPASS, $encoding) { 
     $this->CONN=false;
     if(!function_exists("oci_connect"))die("Oracle instant client is not installed.");
-    $this->CONN=oci_connect($DBUSER,$DBPASS,$TNS,"AL32UTF8");
+    if($encoding=="UTF8")$encoding="AL32UTF8";
+    $this->CONN=oci_connect($DBUSER,$DBPASS,$TNS,$encoding);
   }
-  function set_encoding(){return true;}
+  function set_encoding(){return false;}
   function exec($Q,$COMMITMODE=OCI_DEFAULT) {
     $stid = oci_parse($this->CONN, $Q);
     $r = oci_execute($stid, $COMMITMODE);
