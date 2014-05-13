@@ -1,9 +1,7 @@
 <?php /*
-<<<<<<< HEAD
 	2012-2013 (c) [Z]sombor's [S]imple [D]ata[B]ase	v3.0
-=======
+
 	[Z]sombor's [S]imple [D]ata[B]ase	v3.0
->>>>>>> zsdb3-bugfix
 	
 	See README.md in directory 'zsdb3' for usage
 
@@ -59,7 +57,6 @@ class zsdb3 {
   }
   
   private function sql_escape($data) {
-<<<<<<< HEAD
       return sprintf("'%s'", str_replace("'","`",$data) );
       if(is_numeric($data))return $data;
       $unpacked = unpack('H*hex', $data);
@@ -72,22 +69,8 @@ class zsdb3 {
     return call_user_func_array(array($this->D,$method), $args);
   }
   
-=======
-    return sprintf("'%s'", str_replace("'","`",$data) );
-    if(is_numeric($data))return $data;
-    $unpacked = unpack('H*hex', $data);
-    return '0x' . $unpacked['hex'];
-  }
-  
-  private function fatal($msg){die("\n\tZSDB3: Fatal error: $msg\n\n");}
-  
-  function __call($method, $args){	// for a function in specific class
-    return call_user_func_array(array($this->D,$method), $args);
-  }
-  
 
 
->>>>>>> zsdb3-bugfix
   public function insert($table, $datarr) {	/* inserts an array-specified row to a table */
     if(!$table)return false;
     if(!$datarr)return false ;
