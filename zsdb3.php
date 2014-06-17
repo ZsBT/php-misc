@@ -8,10 +8,14 @@
 */
 
 
+
+
+if(!defined("__DIR__"))define("__DIR__",dirname(__FILE__));	// for PHP version < 5.3.0
+
+
 class zsdb3 {
-  private $CONN /* connection variable */
-    ,$in_transaction = false
-    ;
+  private $in_transaction = false;
+  
   function __construct($dbspec,$encoding="UTF8"){		/* format: type::dbname@host[:port][/user:password] or sqlite3::filename */
     if(preg_match('/(sqlite3)::(.+)/i', $dbspec, $ma));else
     if(preg_match('/(.+)::(.+)@([a-z0-9_\.-]+)(?::(\d+))?(?:\/([a-z0-9_\.]+:.*))?/i', $dbspec, $ma));else
@@ -53,6 +57,7 @@ class zsdb3 {
   
     if(!$D)$this->fatal("Error connecting to $type database");
     $this->D = &$D;
+    $this->CONN = &$D->CONN;
     return $D;
   }
   
