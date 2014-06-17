@@ -27,6 +27,10 @@ class zsdb3_mssql{
   function fn($R,$i)	{return mssql_field_name($R,$i);}
   function free($R)	{return mssql_free_result($R);}
   
+  function set_encoding($enc){
+    ini_set('mssql.charset', strtoupper($enc) );
+  }
+  
   function mssql_escape($data) {
       return sprintf("'%s'", str_replace("'","`",$data) );
       if(is_numeric($data))return $data;
