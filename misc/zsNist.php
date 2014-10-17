@@ -1,13 +1,16 @@
 <?php /*
 
+	zsNist.php	v1.0
+	
 	NIST class to handle ANSI/NIST fingerprint data
 	
 	  For details, see: http://fingerprint.nist.gov/
 	
 	
-	
 	(c) 2014 kalo@zsombor.net
 	
+	LICENSE: see http://www.wtfpl.net/txt/copying/
+
 
 
 class synopsis
@@ -39,27 +42,47 @@ class zsNist {
   public $data=false;	// the structured data 
   
   public function readfile($fn){	// reads a NIST fingerprint file to structured $this->data 
-    if(!$s=file_get_contents($fn))die("no such file: $fn\n");
+    if(!$s=file_get_contents($fn))return false;
     return $this->read($s);
   }
   
   public function read($s){	// read NIST fingerprint from binary string to structured $this->data 
-    $reca = explode(NIST_FS, $s);
-    $t1s=array_shift($reca);
-    $t2s=array_shift($reca);
-    $t4s=implode(NIST_FS,$reca);
+    $reca = @explode(NIST_FS, $s);
+    $t1s=array_shift($reca);	// type-1 record must be the first
+    $ts = @implode(NIST_FS, $reca);	// remaining (yet unknown) records
     
-    foreach(explode(NIST_GS, $t1s) as $line)
-      if(preg_match('/^(\d+)\.(\d+):(.+)/',$line,$ma))
-        $type[$ma[1]][0+$ma[2]]=$ma[3];
-
-    foreach(explode(NIST_GS, $t2s) as $line)
+    foreach(explode(NIST_GS, $t1s) as $line)	// reading type-1 values
       if(preg_match('/^(\d+)\.(\d+):(.+)/',$line,$ma))
         $type[$ma[1]][0+$ma[2]]=$ma[3];
         
-    while($b = &$this->shiftT4($t4s))
-      $type[4][]=$b;
+    $CNT = $type[1][3];		// file content (CNT)
+    if(!preg_match('/^1'.NIST_US.'/',$CNT))	// first information in CNT must be '1'
+      throw new Exception("Invalid header in 1.003");
       
+    $subfields = @explode(NIST_RS,$CNT);
+    array_shift($subfields);	// number of other (type-2 and type-4) records
+    
+    foreach($subfields as $subfield){
+      list($rtyp,$idc) = explode(NIST_US, $subfield);
+      switch($rtyp){
+        case 2:
+          if(!preg_match('/^[0-9\.]+:(\d+)/',$ts,$ma))
+            throw new Exception("Invalid type-2 record");
+          $t2len = $ma[1];
+          $t2s = substr($ts,0,$ma[1]-1);
+          foreach(explode(NIST_GS, $t2s) as $line)
+            if(preg_match('/^(\d+)\.(\d+):(.+)/',$line,$ma))
+              $type[$ma[1]][0+$ma[2]]=$ma[3];
+          $ts = substr($ts,$t2len);
+          break;
+        case 4:
+          $type[4][] = &$this->shiftT4($ts);
+          break;
+        default:
+          throw new Exception("Unknown record type-$rtyp");
+      }
+    }
+    
     return $this->data = &$type;
   }
   
@@ -117,7 +140,8 @@ class zsNist {
     $idca=array();
     
     // type-2 
-    $idca[]="2".NIST_US."00";
+    $idca[]="2".NIST_US."0";
+    $type[2][2]=0;
     $t2s = $this->concat(2,$type[2]);
     
     // type-4 
@@ -125,7 +149,7 @@ class zsNist {
     foreach($type[4]as $i=>$t4){
       $idc = 1+$i;
       $idca[] = sprintf("4%s%02d", NIST_US, $idc);
-      $t4s.=	$this->makenum($t4[1], 4)
+      $t4is=	$this->makenum($t4[1], 4)
         .$this->makenum($idc)
         .$this->makenum($t4[3])
         .$this->makenum($t4[4]). "ÿÿÿÿÿ"
@@ -135,10 +159,23 @@ class zsNist {
         .$this->makenum($t4[8])
         .$t4[9]
         ;
+      $rlen = strlen($t4is);
+      $t4is=	$this->makenum($rlen, 4)	// rebuild is necessary to count record length 
+        .$this->makenum($idc)
+        .$this->makenum($t4[3])
+        .$this->makenum($t4[4]). "ÿÿÿÿÿ"
+        .$this->makenum($t4[5])
+        .$this->makenum($t4[6],2)
+        .$this->makenum($t4[7],2)
+        .$this->makenum($t4[8])
+        .$t4[9]
+        ;
+      $type[4][$i][1] = $rlen;
+      $t4s.=$t4is;
     }
     
     // type-1 
-    $type[1][2] = "0300";
+    $type[1][2] = "0300";	// the class creates this version.
     $type[1][3] = "1".NIST_US.count($idca).NIST_RS.implode(NIST_RS, $idca);	// CNT 
     $type[1][5] = date("Ymd");
     $t1s = $this->concat(1,$type[1]);
@@ -149,7 +186,8 @@ class zsNist {
   public function explode(){	// print loaded nist data to stdout and save images to files
     if(!$this->data)return false;
     $ret="";
-    foreach(array(1,2)as $ri)foreach($this->data[$ri] as $field=>$data){
+    foreach(array(1,2)as $ri)
+    if(is_array($this->data))foreach($this->data[$ri] as $field=>$data){
         $ret.=sprintf("%d.%03d=%s\n", $ri, $field, $data);
     }
     
@@ -161,7 +199,6 @@ class zsNist {
         }
         $ret.=sprintf("4.%03d=%s\n", $field, $data);
       }
-    echo $ret;
     return $ret;
   }
   
