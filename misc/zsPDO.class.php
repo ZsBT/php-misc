@@ -4,6 +4,8 @@
 	This class extends PDO and helps to query/insert data with one call.
 	Therefore we support often-used select statements.
 
+	(c) kalo@zsombor.net https://github.com/ZsBT
+	
 */
 
 class zsPDO extends PDO {
@@ -32,10 +34,11 @@ class zsPDO extends PDO {
         $keys = @array_keys($datArr);
         $sql = @sprintf("insert into $table (%s) values (:%s)", implode(",",$keys), implode(",:",$keys) );
         if(!$st = $this->prepare($sql))throw new Exception("Invalid statement: $sql");
-            
+        
         // bind parameters
+        $tmp=null;
         foreach($datArr as $key => $value)
-            $st->bindParam(":$key", $value);
+            $st->bindParam(":$key", $tmp=$value);
         
         if(!$st->execute())return false;
         return ($ID=$this->lastInsertId())? $ID:true ;
@@ -54,8 +57,9 @@ class zsPDO extends PDO {
         if(!$st = $this->prepare($sql))throw new Exception("Invalid statement: $sql");
         
         // bind parameters
+        $tmp=null;
         foreach($datArr as $key => $value)
-            $st->bindParam(":$key", $value);
+            $st->bindParam(":$key", $tmp=$value);
         
         if(!$st->execute())return false;
         return $st->rowCount();
