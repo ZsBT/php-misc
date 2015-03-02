@@ -31,6 +31,8 @@ class zsdb3_mssql{
     ini_set('mssql.charset', strtoupper($enc) );
   }
   
+  function fatal($msg){ die($msg); }
+  
   function mssql_escape($data) {
       return sprintf("'%s'", str_replace("'","`",$data) );
       if(is_numeric($data))return $data;
