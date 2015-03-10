@@ -1,13 +1,10 @@
 <?php /*
-
-
 	This class extends PDO and helps to query/insert data with one call.
 	Therefore we support often-used select statements.
 
-	(c) kalo@zsombor.net https://github.com/ZsBT
+	https://github.com/ZsBT
 	
 */
-
 class zsPDO extends PDO {
 
     public function oneValue($sql){  /* returns the first column of the first row of the query */
@@ -22,11 +19,11 @@ class zsPDO extends PDO {
         return $st->fetchObject();
     }
     
-    public function allRow($sql){  /* returns an array of stdClass objects - be sure to use only reasonable number of records. */
+    public function allRow($sql,$mode=PDO::FETCH_CLASS){  /* returns an array of stdClass objects - be sure to use only reasonable number of records. */
         if(!$st = $this->prepare($sql))
             throw new Exception("Prepare statement error: ".json_encode($this->errorInfo()) );
         $st->execute();
-        $fa = $st->fetchAll(PDO::FETCH_CLASS);
+        $fa = $st->fetchAll($mode);
         return $fa;
     }
     
@@ -43,7 +40,6 @@ class zsPDO extends PDO {
         if(!$st->execute())return false;
         return ($ID=$this->lastInsertId())? $ID:true ;
     }
-
     public function update($table, $datArr, $cond){  /* update data in a table. datArr is a mapped array. $cond is the condition string */
         $keys = @array_keys($datArr);
         
