@@ -13,22 +13,22 @@ abstract class logger {
     
     $line = date("Y-m-d H:i:s ")."{ $msg } ";
     
-    if($ip = $_SERVER["REMOTE_ADDR"])$line.="<$ip> ";
+    if( isset($_SERVER["REMOTE_ADDR"]) )$line.=sprintf("<%s>", $_SERVER["REMOTE_ADDR"]);
     
     if($trace){
       $trca = debug_backtrace();
+
       foreach($trca as $trc){
         $ob = (object)$trc;
         $fun = $ob->function;
-        if(isset($ob->class)){
-          if( ($ob->class=="logger") && ($fun!="info") )continue;
-          $fun = "{$ob->class}::$fun";
-        }
+        
+        if($ob->file == __FILE__ ) continue;
         
         if($debug)$fun.= json_encode($ob->args);else $fun.="()";
         $fun.=sprintf("@%s:{$ob->line}",basename($ob->file));
         
         $line.= "$fun; ";
+        break;
       }
     }
     
