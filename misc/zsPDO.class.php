@@ -88,9 +88,10 @@ class zsPDO extends PDO {
         $st = $this->prep($sql);
         
         // bind parameters
-        $tmp=null;
-        foreach($datArr as $key => $value)
-            $st->bindParam(":$key", $tmp=$value);
+        foreach($datArr as $key => $value){
+            $tmp = $value;
+            $st->bindParam(":$key", $tmp );
+        }
         
         if(!$st->execute())return false;
         return ($ID=$this->lastInsertId())? $ID:true ;
