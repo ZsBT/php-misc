@@ -7,7 +7,7 @@
 
 abstract class logger {
 
-  public function info($msg, $trace=true, $debug=false){
+  static public function info($msg, $trace=true, $debug=false){
     if(!is_string($msg))$msg = json_encode($msg);
     $msg = str_replace("\n", "\\n", $msg);
     
@@ -38,14 +38,14 @@ abstract class logger {
   }
   
 
-  public function error($msg){
+  static public function error($msg){
     if(!is_string($msg))$msg = json_encode($msg);
     logger::info("ERROR: $msg");
     return false;
   }
   
   
-  public function warn($msg){
+  static public function warn($msg){
     if(!is_string($msg))$msg = json_encode($msg);
     logger::info("WARNING: $msg");
     return $msg;
