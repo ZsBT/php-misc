@@ -76,7 +76,7 @@ class zsPDO extends PDO {
     public function iterate($sql, $function, $mode=PDO::FETCH_OBJ){	/* pass every record object as parameter to $function  */
         $st = $this->prepexec($sql);
         while($fo = $st->fetch($mode))
-            $function($fo);
+            if(false===$function($fo))return false;
         return true;
     }
     

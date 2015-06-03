@@ -33,7 +33,7 @@ abstract class logger {
     }
     
     // here you can set any other output you would like
-    file_put_contents("php://stderr", "$line\n");
+    file_put_contents("php://stdout", "$line\n");
 #    return file_put_contents(sprintf("%s/galamb-%s.log",LOG_DIR,date("Ymd") ), "$line\n", FILE_APPEND);
   }
   
