@@ -21,7 +21,7 @@ abstract class logger {
 
   static private function printout($type, $msg, $trace){
     // format to JSON if not string
-    $msg = (is_string($msg)? $msg:json_encode($msg) );
+    $msg = (is_string($msg)? $msg:json_encode($msg,JSON_NUMERIC_CHECK) );
     // strip newlines
     $msg = str_replace("\r", "", $msg);
     $msg = str_replace("\n", "\\n", $msg);
