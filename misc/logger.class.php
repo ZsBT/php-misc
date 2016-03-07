@@ -69,7 +69,7 @@ abstract class logger {
     return logger::printout("WARN", $msg, $trace);
   }
   
-  static public function error($msg, $trace=false){
+  static public function error($msg, $trace=true){
     return logger::printout("ERROR", $msg, $trace);
   }
   
