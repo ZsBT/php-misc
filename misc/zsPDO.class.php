@@ -12,9 +12,12 @@ CLASS SYNOPSIS
     public function oneCol($sql)  // returns the first column of all rows of the query 
     public function oneRow($sql, $mode=PDO::FETCH_OBJ)  // returns the first row of a statement, as stdClass object  
     public function allRow($sql, $mode=PDO::FETCH_CLASS)  // returns an array of stdClass objects - be sure to use only reasonable number of records. 
+
     public function iterate($sql, $function, $mode=PDO::FETCH_OBJ)	// pass every record object as parameter to $function  
     public function insert($table, $datArr)  // insert data to a table. datArr is a mapped array. no BLOB support 
     public function update($table, $datArr, $cond)  // update data in a table. datArr is a mapped array. $cond is the condition string 
+
+    public function lastError()      // return last error message
 
 
 DEPENDENCIES
@@ -24,6 +27,7 @@ DEPENDENCIES
 	
 CHANGELOG
 	
+	2015-11		added lastError()
 	2015-03		added iterate(), consolidated statement preparations
 	
 */
@@ -116,4 +120,10 @@ class zsPDO extends PDO {
         if(!$st->execute())return false;
         return $st->rowCount();
     }
+
+
+     public function lastError(){      /* return last error message */
+         return $this->errorInfo()[2];
+     }
+
 }
