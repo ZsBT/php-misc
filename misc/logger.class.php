@@ -12,11 +12,11 @@
 
 
 abstract class logger {
-  const DATEFORMAT = "Y-m-d H:i:s"
-      ,OUTFILE_DEBUG= "php://stdout"    // can be stderr or file or whatever
-      ,OUTFILE_INFO = "php://stdout"    // as above
-      ,OUTFILE_WARN = "php://stdout"    // as above
-      ,OUTFILE_ERROR= "php://stdout"    // as above
+  static $DATEFORMAT = "Y-m-d H:i:s"
+      ,$OUTFILE_DEBUG= "php://stdout"    // can be stderr or file or whatever
+      ,$OUTFILE_INFO = "php://stdout"    // as above
+      ,$OUTFILE_WARN = "php://stdout"    // as above
+      ,$OUTFILE_ERROR= "php://stdout"    // as above
     ; 
 
   static private function printout($type, $msg, $trace){
@@ -25,7 +25,7 @@ abstract class logger {
     // strip newlines
     $msg = str_replace("\r", "", $msg);
     $msg = str_replace("\n", "\\n", $msg);
-    $line = sprintf("%s $type %s ", date(logger::DATEFORMAT), $msg);
+    $line = sprintf("%s $type %s ", date(self::$DATEFORMAT), $msg);
 
     // include IP if exists
     if( isset($_SERVER["REMOTE_ADDR"]) )$line.=sprintf("<%s>", $_SERVER["REMOTE_ADDR"]);
@@ -48,29 +48,29 @@ abstract class logger {
 
     // where to put text
     switch($type){
-      case "DEBUG": $outfile = logger::OUTFILE_DEBUG; break;
-      case "WARN": $outfile = logger::OUTFILE_WARN; break;
-      case "ERROR": $outfile = logger::OUTFILE_ERROR; break;
-      default: $outfile = logger::OUTFILE_INFO; break;
+      case "DEBUG": $outfile = self::$OUTFILE_DEBUG; break;
+      case "WARN": $outfile = self::$OUTFILE_WARN; break;
+      case "ERROR": $outfile = self::$OUTFILE_ERROR; break;
+      default: $outfile = self::$OUTFILE_INFO; break;
     }
     
     return file_put_contents($outfile, "$line\n", FILE_APPEND);
   }
   
   static public function debug($msg, $trace=true){
-    return logger::printout("DEBUG", $msg, $trace);
+    return self::printout("DEBUG", $msg, $trace);
   }
   
   static public function info($msg, $trace=false){
-    return logger::printout("INFO", $msg, $trace);
+    return self::printout("INFO", $msg, $trace);
   }
   
   static public function warn($msg, $trace=false){
-    return logger::printout("WARN", $msg, $trace);
+    return self::printout("WARN", $msg, $trace);
   }
   
   static public function error($msg, $trace=true){
-    return logger::printout("ERROR", $msg, $trace);
+    return self::printout("ERROR", $msg, $trace);
   }
   
 }
