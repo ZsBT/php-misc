@@ -1,10 +1,5 @@
-php-zsdb
+php-misc
 =========
 
-zsdb2
------
-	Simple database layer over different servers (obsolete, use zsdb3 instead)
+Just look into the the files to see what they do.
 
-zsdb3
------
-	Much more simple database layer
