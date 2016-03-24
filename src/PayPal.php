@@ -10,6 +10,11 @@
     "Signature" =>	"paypalApiSignature",
   ));
   
+  
+  CHANGELOG
+  
+  2016-03	HA! HA! What an old code of mine:) Everybody uses their API instead. - Zsombor
+  
 */
 namespace ZsBT\misc;
 
