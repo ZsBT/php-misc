@@ -37,9 +37,9 @@ CHANGELOG
 */
 
 
-require_once("DB.php");	// depends on PEAR DB
-
 namespace ZsBT\misc;
+
+require_once("DB.php");	// depends on PEAR DB
 
 class PDB {
 

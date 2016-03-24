@@ -29,6 +29,8 @@ class synopsis
 
 
 
+namespace ZsBT\misc;
+
 
 /* separator characters */
 
@@ -36,8 +38,6 @@ define("NIST_FS", "\x1C");
 define("NIST_GS", "\x1D");
 define("NIST_RS", "\x1E");
 define("NIST_US", "\x1F");
-
-namespace ZsBT\misc;
 
 class NIST {
   public $data=false;	// the structured data 
