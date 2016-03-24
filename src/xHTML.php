@@ -12,7 +12,13 @@
     
     echo $x->asxml();
     
-
+  
+  
+  CHANGELOG
+  
+  2016-03	fucking old code now but who knows? sy may still need a simple solution. - Zsombor
+  
+  
 */
 
 namespace ZsBT\misc;
