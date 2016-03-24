@@ -5,13 +5,28 @@
   for linux command line only.
                                       - Zsombor, 2015
 
+
+
+  CLASS SYNOPSIS
+
+
+  public function __construct($name=null, $folder="/run/lock" )	// what name to use and where.
+  
+  public function locked()	// check if locked by a running process (or other host)
+  
+  public function lock($pid=null)	// lock with my PID
+  
+  public function unlock()	// remove lockfile
+  
+  
+
 */
 
 namespace ZsBT\misc;
 
 class LockFile {
 
-  function __construct($name=null, $folder="/run/lock" ){
+  public function __construct($name=null, $folder="/run/lock" ){	// what name to use and where.
     if(!$name)$name = str_replace(".php","",basename($_SERVER['SCRIPT_NAME']));
     if(!$name)throw new Exception("Specify a name");
     $this->name = $name;
@@ -21,7 +36,7 @@ class LockFile {
   }
   
   
-  function locked(){	// check if locked by a running process (or other host)
+  public function locked(){	// check if locked by a running process (or other host)
     if(file_exists($this->lockfile) && ($run=file_get_contents($this->lockfile))){
       list($runpid,$runhost) = explode("@",$run);
       if($runhost!=$this->hostname) return 2;
@@ -33,7 +48,7 @@ class LockFile {
   }
   
 
-  function lock($pid=null){	// lock with my PID
+  public function lock($pid=null){	// lock with my PID
     if(!$pid)$pid = posix_getpid();
     return $this->locked()
       ? false
@@ -44,7 +59,7 @@ class LockFile {
   }
   
   
-  function unlock(){	// remove lockfile
+  public function unlock(){	// remove lockfile
     return unlink($this->lockfile);
   }
   
