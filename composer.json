@@ -4,10 +4,11 @@
     "description":"Misc PHP features for everyday coding",
     "keywords":["cache","lockfile","log","nist","fingerprint","paypal","PDO"],
     "homepage":"https://github.com/ZsBT/php-misc",
-    "authors":[{"name":"Zsombor"}],
+    "authors":[{"name":"Zsombor","role":"owner"}],
     "license":"WTFYWT",
     "require": { "php":">=5.3.0" },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "version":"0.1",
     "autoload": {
     	"psr-4": { "ZsBT\\misc\\": "src/" }
     }
