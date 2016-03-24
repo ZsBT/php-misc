@@ -1,5 +1,5 @@
 {
-    "name":"ZsBT/misc",
+    "name":"zsbt/misc",
     "type":"library",
     "description":"Misc PHP features for everyday coding",
     "keywords":["cache","lockfile","log","nist","fingerprint","paypal","PDO"],
