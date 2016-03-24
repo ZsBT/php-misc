@@ -1,5 +1,7 @@
 php-misc
 =========
 
-Just look into the the files to see what they do.
+Repo is currently re-organized for composer support.
+
+Until it's done, just look into the files to see what they do.
 
