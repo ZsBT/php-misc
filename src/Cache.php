@@ -2,33 +2,40 @@
 
 	(c) Zsombor simple cache class with methods set and get				
 	
-	
-CHANGELOG
-  2015-10	remove expired files
+  Variables
+  
+  public static $PREFIX = "/tmp/zsc_";		// where and what name to use for storing data
+  public static $TIMEOUT=360;			// expiration, in seconds
+  
+  
+  Methods
+  
+  public static function set($key,$data)	// write to cache file
+  public static function get($key)		// read from cache file
   	
 	*/
 
 namespace ZsBT\misc;
 
-class Cache {
+abstract class Cache {
+  public static $PREFIX = "/tmp/zsc_";
+  public static $TIMEOUT=360;
   
-  private function fnbykey($key){return $this->PF.md5($key);}
+  private static function fnbykey($key)	{
+    return self::$PREFIX.md5($key);
+  }
 
-  function __construct($timeout=360,$prefix=''){
-    $this->TO=$timeout;
-    $this->PF=sys_get_temp_dir()."/.zscache_{$prefix}_";
+  public static function set($key,$data)	// write to cache file
+  {
+    return file_put_contents(self::fnbykey($key), serialize($data));
   }
 
   
-  public function set($key,$data){
-    return file_put_contents($this->fnbykey($key), serialize($data));
-  }
-
-  
-  public function get($key){
-    $fn=$this->fnbykey($key);
+  public static function get($key)		// read from cache file
+  {
+    $fn=self::fnbykey($key);
     if(!file_exists($fn))return NULL;
-    if(time() - filemtime($fn)>$this->TO){
+    if(time() - filemtime($fn)>self::$TIMEOUT){
       unlink($fn);
       return NULL;
     }
