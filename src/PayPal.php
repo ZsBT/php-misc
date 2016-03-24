@@ -4,15 +4,16 @@
   
   create object with:
   
-  new zsPayPal(array(
+  new PayPal(array(
     "UserName"	=>	"yourpaypal@api.name",
     "Password"	=>	"apiPassword",
     "Signature" =>	"paypalApiSignature",
   ));
   
 */
+namespace ZsBT\misc;
 
-class zsPayPal {
+class PayPal {
   
   function zsPayPal($APIUSER){$this->APIUSER=$APIUSER;}
   function isodate($time){if(is_string($time))$time=strtotime($time);return date('Y-m-d\T00:00:00\Z',$time);}
@@ -75,3 +76,4 @@ class zsPayPal {
   function trxdetail($TRXID){return $this->Post('GetTransactionDetails',array("TRANSACTIONID"=>$TRXID));}
 
 }
+?>

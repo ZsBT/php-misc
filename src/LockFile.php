@@ -7,8 +7,9 @@
 
 */
 
+namespace ZsBT\misc;
 
-class lockfile {
+class LockFile {
 
   function __construct($name=null, $folder="/run/lock" ){
     if(!$name)$name = str_replace(".php","",basename($_SERVER['SCRIPT_NAME']));
@@ -50,3 +51,4 @@ class lockfile {
   
 }
 
+?>

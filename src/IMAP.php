@@ -4,7 +4,10 @@
     
 */
 
-class zsimap {
+
+namespace ZsBT\misc;
+
+class IMAP {
   public function zsimap($creda){		// needs an associated array with 'url', 'user', 'pass'
     $creds=(object)$creda;
     if(!$this->CONN=imap_open($creds->url,$creds->user,$creds->pass)){echo "error opening folder $url ";return FALSE;}
@@ -92,3 +95,4 @@ class zsimap {
 }
 
 
+?>

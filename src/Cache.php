@@ -8,8 +8,9 @@ CHANGELOG
   	
 	*/
 
+namespace ZsBT\misc;
 
-class zsCache {
+class Cache {
   
   private function fnbykey($key){return $this->PF.md5($key);}
 
@@ -35,3 +36,4 @@ class zsCache {
   }
 
 }
+?>

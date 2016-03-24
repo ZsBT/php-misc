@@ -1,10 +1,13 @@
 <?php /* 
 
-    converts an object or array to XML
+    converts an object or array to SimpleXMLelement
 
 */
-    
-class zsOb2Xml {
+
+
+namespace ZsBT\misc;
+
+class ob2xml {
     var $resX;
     function asxml($ob) {$this->iteratechildren($ob,$this->resX);return $this->resX->asXML();}
     function __construct($root){$this->resX = new SimpleXMLElement("<$root/>");}
@@ -22,3 +25,4 @@ class zsOb2Xml {
     }
 }
 
+?>

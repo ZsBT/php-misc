@@ -3,7 +3,7 @@
 	This class sits on the great PHP-DB and helps to query/store data with one call.
 	Therefore we support often-used select statements.
 	
-	Syntax tries to be the same as in zsPDO class.
+	Syntax tries to be the same as in my PDO class.
 	
 	https://github.com/ZsBT
 
@@ -36,9 +36,12 @@ CHANGELOG
 	
 */
 
-require_once("DB.php");
 
-class zsPDB {
+require_once("DB.php");	// depends on PEAR DB
+
+namespace ZsBT\misc;
+
+class PDB {
 
     function __construct($DSN){
         $this->db =& DB::connect($DSN);
@@ -131,3 +134,4 @@ class zsPDB {
     }
     
 }
+?>

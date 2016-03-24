@@ -37,8 +37,9 @@ define("NIST_GS", "\x1D");
 define("NIST_RS", "\x1E");
 define("NIST_US", "\x1F");
 
+namespace ZsBT\misc;
 
-class zsNist {
+class NIST {
   public $data=false;	// the structured data 
   
   public function readfile($fn){	// reads a NIST fingerprint file to structured $this->data 
@@ -204,3 +205,4 @@ class zsNist {
   
   
 }
+?>

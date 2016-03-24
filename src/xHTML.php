@@ -1,20 +1,23 @@
 <?php	/*	(c) 2012 Zsombor 
 
-  Class that produces XHTML easliy. based on SimpleXMLelement
+  Class that produces xHTML easliy. based on SimpleXMLelement
   
   Example: 
-    require_once 'zsxhtml.php';
-    $x = new ZSXHTML();
+    $x = new ZsBT\misc\xHTML();
+    
     $x->body->h1 = $x->head->title = "Hello World!";
     $x->body->h1["align"]="center";
     $x->addcss("nicebasic.css");
     $x->addjs("hello.js");
+    
     echo $x->asxml();
     
 
 */
 
-class zsxe extends simplexmlelement {
+namespace ZsBT\misc;
+
+class zsxe extends \simplexmlelement {
   function asnode($accents=false){
     $ret= str_replace('<?xml version="1.0"?>','',$this->asxml());
     if($accents)return $this->accenter($ret);
@@ -44,7 +47,8 @@ class zsxe extends simplexmlelement {
 }
 
 
-class ZSXHTML {
+
+class xHTML {
   var $X;
 
   function __construct($sxe=0) {
@@ -103,3 +107,4 @@ class ZSXHTML {
   public function addicon($uri){$link=&$this->head->link[];$link['rel']='shortcut icon';$link['href']=$uri;}
 
 }
+?>

@@ -3,9 +3,11 @@
 
 */
 
+namespace ZsBT\misc;
+
 if(!defined("EOL"))define("EOL","\r\n");
 
-class ZsSoapClient {
+class SoapClient {
 	var $mbpfix="@zsSoapClient";			/* basetext for mime boundary */
 	var $logfile="/var/log/bedszclient.log";
 	var $UserAgent="ZsSOAPclient";
@@ -112,3 +114,4 @@ class ZsSoapClient {
 	
 }
 
+?>

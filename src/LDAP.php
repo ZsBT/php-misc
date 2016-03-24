@@ -5,7 +5,10 @@
     requires php5-ldap
 */
 
-class zsldap {
+
+namespace ZsBT\misc;
+
+class LDAP {
   var $queryName, $queryPass;	// the user to bind with - optional if you use login (will set)
   
   function __construct($domain,$svr=false,$DN=false){	/* if server and DN are false, will be set based on domain (FDQN) */
@@ -63,3 +66,4 @@ class zsldap {
   }
   function is_admin($who){return $this->ingroup($who,"cn=Enterprise Admins");}
 }
+?>

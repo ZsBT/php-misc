@@ -32,8 +32,9 @@ CHANGELOG
 	
 */
 
+namespace ZsBT\misc;
 
-class zsPDO extends PDO {
+class PDO extends PDO {
 
 
     private function prep($sql){	/* tests errors in statement. drops error on failure */
@@ -127,3 +128,4 @@ class zsPDO extends PDO {
      }
 
 }
+?>

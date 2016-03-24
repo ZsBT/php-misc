@@ -3,8 +3,9 @@
  reads a seller's items
  
                                                                        */
+namespace ZsBT\misc;
 
-class zsEbay {
+class EBay {
   private $endpoint="http://svcs.ebay.com/services/search/FindingService/v1";
   
   public function __construct($appid){
@@ -34,3 +35,4 @@ class zsEbay {
   
 }
 
+?>
