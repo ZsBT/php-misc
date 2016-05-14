@@ -1,7 +1,13 @@
 php-misc
 =========
 
-Repo is being re-organized for composer support.
+Project is in dev stage, so use this *composer.json* :
 
-Until it's done, just look into the files to see what they do.
+    {
+    "minimum-stability":"dev",
+        "require": {
+            "zsbt/misc": "dev-master"
+        }
+    }
 
+then *composer update*
