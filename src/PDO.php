@@ -28,6 +28,7 @@ DEPENDENCIES
 	
 CHANGELOG
 	
+	2016-05		added insert_multi()
 	2016-03		moving under namespace
 	2015-11		added lastError()
 	2015-03		added iterate(), consolidated statement preparations
