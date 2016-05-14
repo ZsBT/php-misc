@@ -15,6 +15,7 @@ CLASS SYNOPSIS
 
     public function iterate($sql, $function, $mode=PDO::FETCH_OBJ)	// pass every record object as parameter to $function  
     public function insert($table, $datArr)  // insert data to a table. datArr is a mapped array. no BLOB support 
+    public function insert_multi($table, $datArrArr)  // insert multiple data to a table. datArr is an array of mapped array. no BLOB support
     public function update($table, $datArr, $cond)  // update data in a table. datArr is a mapped array. $cond is the condition string 
 
     public function lastError()      // return last error message
@@ -98,6 +99,30 @@ class PDO extends \PDO {
             $st->bindParam(":$key", $tmp=$value );
         
         if(!$st->execute())return false;
+        return ($ID=$this->lastInsertId())? $ID:true ;
+    }
+
+
+    public function insert_multi($table, $datArrArr){  /* insert multiple data to a table. datArr is an array of mapped array. no BLOB support */
+        $keys = @array_keys($datArrArr[0]);
+        $sql = @sprintf("insert into $table (%s) values ", @implode(",",$keys) );
+        
+        // build values() statement
+        foreach($datArrArr as $i=>$datArr)
+            $valA[] = ":".implode("$i,:", $keys).$i;
+        $sql.= "(".implode("), (",$valA).")";
+        
+        $st = $this->prep($sql);
+        
+        // bind parameters
+        foreach($datArrArr as $i=>$datArr){
+            foreach($datArr as $key => $value)
+                $st->bindParam(":{$key}{$i}", $tmp=$value );
+        }
+
+        if(!$st->execute())
+            return false;
+        
         return ($ID=$this->lastInsertId())? $ID:true ;
     }
 
