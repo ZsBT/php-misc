@@ -72,7 +72,7 @@ class NIST {
           $t2len = $ma[1];
           $t2s = substr($ts,0,$ma[1]-1);
           foreach(explode(NIST_GS, $t2s) as $line)
-            if(preg_match('/^(\d+)\.(\d+):(.+)/',$line,$ma))
+            if(preg_match('/^(\d+)\.(\d+):(.+)/s',$line,$ma))
               $type[$ma[1]][0+$ma[2]]=$ma[3];
           $ts = substr($ts,$t2len);
           break;
