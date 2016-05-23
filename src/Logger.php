@@ -80,5 +80,10 @@ class Logger {
     return $this->printout("ERROR", $msg, $trace);
   }
   
+  public function fatal($msg){
+#    $this->error("FATAL: $msg");
+    throw new \Exception($msg);
+  }
+  
 }
 ?>

@@ -8,8 +8,7 @@
 namespace ZsBT\misc;
 
 class IMAP {
-
-  function __construct($creda){		// needs an associated array with 'url', 'user', 'pass'
+  public function __construct($creda){		// needs an associated array with 'url', 'user', 'pass'
     $creds=(object)$creda;
     if(!$this->CONN=imap_open($creds->url,$creds->user,$creds->pass)){echo "error opening folder $url ";return FALSE;}
   }
@@ -17,23 +16,34 @@ class IMAP {
   
   // functions you will use
   
+  
+  // mailbox statistics
   public function stat(){ 
       $check = imap_mailboxmsginfo($this->CONN); 
       return ((array)$check); 
   } 
   
+  // messages in folder
   public function listfolder($message="") { 
       if ($message) { $range=$message; } else { $MC = imap_check($this->CONN); $range = "1:".$MC->Nmsgs; } 
       $response = imap_fetch_overview($this->CONN,$range); 
       foreach ($response as $msg) $result[$msg->msgno]=(array)$msg; return $result; 
   } 
   
+  
+  // read mail header
   public function retr($message) { return(imap_fetchheader($this->CONN,$message,FT_PREFETCHTEXT)); } 
-
+  
+  
+  // read mail body
   public function body($message) { return(imap_body($this->CONN,$message)); } 
-
+  
+  
+  // delete message
   public function dele($message) { return(imap_delete($this->CONN,$message)); } 
-
+  
+  
+  // read boundaries
   public function mime_to_array($mid,$parse_headers=false) { 
       $mail = imap_fetchstructure($this->CONN,$mid); 
       $mail = $this->get_parts($mid,$mail,0); 
