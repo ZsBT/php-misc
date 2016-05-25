@@ -43,6 +43,10 @@ class IMAP {
   public function dele($message) { return(imap_delete($this->CONN,$message)); } 
   
   
+  // expunge deleted ones
+  public function expunge() { return imap_expunge($this->CONN); }
+  
+  
   // read boundaries
   public function mime_to_array($mid,$parse_headers=false) { 
       $mail = imap_fetchstructure($this->CONN,$mid); 
