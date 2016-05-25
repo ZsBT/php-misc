@@ -24,6 +24,7 @@ class Logger {
       ,$OUTFILE_INFO = "php://stdout"    // as above
       ,$OUTFILE_WARN = "php://stdout"    // as above
       ,$OUTFILE_ERROR= "php://stdout"    // as above
+      ,$trace = false		// print filename & line no
     ; 
 
   private function printout($type, $msg, $trace){
@@ -38,18 +39,14 @@ class Logger {
     if( isset($_SERVER["REMOTE_ADDR"]) )$line.=sprintf("<%s>", $_SERVER["REMOTE_ADDR"]);
 
     // more details here
-    if( $trace ){
-      $trca = debug_backtrace();
+    if( $trace || $this->trace ){
+      $trca = $ta = debug_backtrace(0);
       array_shift($trca);
       foreach($trca as $trc){
         $ob = (object)$trc;
-        $fun = $ob->function;
         if($ob->file == __FILE__ ) continue;
-//        $fun.= json_encode($ob->args);
-        $fun.=sprintf("@%s:{$ob->line}",basename($ob->file));
-
-        $line.= "$fun; ";
-        break;
+        $line.= sprintf("[%s:{$ob->line}] ",basename($ob->file));
+#        break;
       }
     }
 
