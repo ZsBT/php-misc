@@ -60,7 +60,6 @@ class Logger {
     
     return file_put_contents($outfile, "$line\n", FILE_APPEND);
   }
-  
   public function debug($msg, $trace=true){
     return $this->printout("DEBUG", $msg, $trace);
   }
@@ -78,9 +77,22 @@ class Logger {
   }
   
   public function fatal($msg){
-#    $this->error("FATAL: $msg");
+    $this->error("FATAL: $msg");
     throw new \Exception($msg);
   }
+  
+  
+
+  public function setlogfile($filename)		// set all log file name to this
+  {
+    return
+      $this->OUTFILE_DEBUG =
+      $this->OUTFILE_INFO =
+      $this->OUTFILE_WARN =
+      $this->OUTFILE_ERROR = 
+        $filename;
+  }
+  
   
 }
 ?>
