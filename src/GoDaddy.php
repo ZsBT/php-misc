@@ -18,6 +18,8 @@
 
   */
   
+
+namespace ZsBT\misc;
   
 class GoDaddy {
   const API_URL = "https://api.godaddy.com/v1";
