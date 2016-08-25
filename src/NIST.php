@@ -147,9 +147,10 @@ class NIST {
     
     // type-4 
     $t4s="";
+    if(count($type[4]))
     foreach($type[4]as $i=>$t4){
       $idc = 1+$i;
-      $idca[] = sprintf("4%s%02d", NIST_US, $idc);
+      $idca[] = sprintf("4%s%03d", NIST_US, $idc);
       $t4is=	$this->makenum($t4[1], 4)
         .$this->makenum($idc)
         .$this->makenum($t4[3])
