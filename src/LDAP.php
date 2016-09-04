@@ -38,11 +38,11 @@ class LDAP {
     $ia=$this->search($filter,$DN,$type);if(!$ia || !$ia["count"]) return NULL;
     $reta=array();
     foreach($ia as $i){
-      $ret = new stdClass;
+      $ret = new \stdClass;
       if(is_array($i)){
         foreach($i as $k=>$v)
           if(!is_int($k)){
-            if($v['count']==1)$val=$v[0];
+            if( $v && isset($v['count']) && ($v['count']==1))$val=$v[0];
             else {
               if(is_array($v))
                 if($v['count'])unset($v['count']);

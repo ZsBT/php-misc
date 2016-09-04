@@ -20,7 +20,7 @@ namespace ZsBT\misc;
 
 class PayPal {
   
-  function zsPayPal($APIUSER){$this->APIUSER=$APIUSER;}
+  function __construct($APIUSER){$this->APIUSER=$APIUSER;}
   function isodate($time){if(is_string($time))$time=strtotime($time);return date('Y-m-d\T00:00:00\Z',$time);}
   function msg($msg){echo "zsPayPal: $msg\n";}
   function error($msg,$ret=FALSE){$this->msg("error: $msg");return $ret;}
