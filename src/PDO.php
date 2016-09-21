@@ -38,6 +38,11 @@ CHANGELOG
 namespace ZsBT\misc;
 
 class PDO extends \PDO {
+    
+    public function __construct($dsn, $username=NULL, $password=NULL, $options=[] ){
+        parent::__construct($dsn, $username, $password, $options);
+        self::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+    }
 
 
     private function prep($sql){	/* tests errors in statement. drops error on failure */
@@ -91,7 +96,7 @@ class PDO extends \PDO {
     
     public function insert($table, $datArr){  /* insert data to a table. datArr is a mapped array. no BLOB support */
         $keys = @array_keys($datArr);
-        $sql = @sprintf("insert into $table (%s) values (:%s)", implode(",",$keys), implode(",:",$keys) );
+        $sql = @sprintf("insert into $table (\"%s\") values (:%s)", implode('","',$keys), implode(",:",$keys) );
 
         $st = $this->prep($sql);
         
