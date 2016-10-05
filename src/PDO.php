@@ -40,6 +40,9 @@ namespace ZsBT\misc;
 class PDO extends \PDO {
     
     public function __construct($dsn, $username=NULL, $password=NULL, $options=[] ){
+        // use persistent connection if not specified
+        if(!isset($options[PDO::ATTR_PERSISTENT]))$options[PDO::ATTR_PERSISTENT] = true;
+        
         parent::__construct($dsn, $username, $password, $options);
         self::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
     }
