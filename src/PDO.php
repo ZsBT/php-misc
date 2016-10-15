@@ -69,8 +69,7 @@ class PDO extends \PDO {
 
 
     public function oneValue($sql){  /* returns the first column of the first row of the query */
-        $fa = $this->prepexec($sql)->fetch(PDO::FETCH_NUM);
-        return $fa[0];
+        return $this->prepexec($sql)->fetch(PDO::FETCH_NUM)[0];
     }
 
     
