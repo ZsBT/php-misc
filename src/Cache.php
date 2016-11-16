@@ -19,7 +19,7 @@ namespace ZsBT\misc;
 
 abstract class Cache {
   public static $PREFIX = "/tmp/zsc_";
-  public static $TIMEOUT=360;
+  public static $TIMEOUT = 360;
   
   private static function fnbykey($key)	{
     return self::$PREFIX.md5($key);
@@ -27,7 +27,7 @@ abstract class Cache {
 
   public static function set($key,$data)	// write to cache file
   {
-    return file_put_contents(self::fnbykey($key), serialize($data));
+    return file_put_contents(self::fnbykey($key), @serialize($data));
   }
 
   
@@ -35,11 +35,16 @@ abstract class Cache {
   {
     $fn=self::fnbykey($key);
     if(!file_exists($fn))return NULL;
-    if(time() - filemtime($fn)>self::$TIMEOUT){
+    
+    if( (time() - filemtime($fn)) > self::$TIMEOUT){
       unlink($fn);
       return NULL;
     }
-    return unserialize(file_get_contents($fn));
+    return @unserialize(@file_get_contents($fn));
+  }
+  
+  public static function del($key){	// delete from cache
+    return unlink(self::fnbykey($key));
   }
 
 }

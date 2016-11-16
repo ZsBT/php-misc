@@ -50,7 +50,7 @@ class PDO extends \PDO {
 
     private function prep($sql){	/* tests errors in statement. drops error on failure */
         if(!$st = $this->prepare($sql))throw new \Exception(
-            "Prepare statement error: ".json_encode($this->errorInfo())
+            "Prepare statement error: ".json_encode($this->errorInfo())." SQL=[$sql]"
         );
         return $st;
     }
