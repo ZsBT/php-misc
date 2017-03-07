@@ -1,29 +1,33 @@
 <?php /*
 
-	(c) Zsombor simple cache class with methods set and get				
+	(c) Zsombor's simple cache class with methods set and get				
 	
   Variables
   
-  public static $PREFIX = "/tmp/zsc_";		// where and what name to use for storing data
-  public static $TIMEOUT=360;			// expiration, in seconds
+  public static $PREFIX;		// where and what name to use for storing data
+  public static $TIMEOUT;			// expiration, in seconds
   
   
   Methods
   
   public static function set($key,$data)	// write to cache file
   public static function get($key)		// read from cache file
+  public static function del($key)		// delete from cache file
+  public static function cleanup()	// delete expired files
   	
 	*/
 
 namespace ZsBT\misc;
 
 abstract class Cache {
-  public static $PREFIX = "/tmp/zsc_";
+  public static $PREFIX = "/tmp/zsCache";
   public static $TIMEOUT = 360;
   
-  private static function fnbykey($key)	{
-    return self::$PREFIX.md5($key);
+
+  private static function fnbykey($key)	{	// generate a filename by key
+    return sprintf("%s-%s.ob", self::$PREFIX, md5($key) );
   }
+
 
   public static function set($key,$data)	// write to cache file
   {
@@ -43,8 +47,17 @@ abstract class Cache {
     return @unserialize(@file_get_contents($fn));
   }
   
+
   public static function del($key){	// delete from cache
     return unlink(self::fnbykey($key));
+  }
+  
+  
+  public static function cleanup()	// delete expired files
+  {
+    foreach( glob(self::$PREFIX."*") as $fn )
+      if( (time()- filemtime($fn)) > self::$TIMEOUT )
+        unlink($fn);
   }
 
 }
