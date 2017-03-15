@@ -36,6 +36,7 @@ class Logger {
     $line = sprintf("%s $type %s ", date($this->DATEFORMAT), $msg);
 
     // include IP if exists
+    if( isset($_SERVER["HTTP_X_FORWARDED_FOR"]) )$line.=sprintf("<%s>", $_SERVER["HTTP_X_FORWARDED_FOR"]);else
     if( isset($_SERVER["REMOTE_ADDR"]) )$line.=sprintf("<%s>", $_SERVER["REMOTE_ADDR"]);
 
     // more details here
