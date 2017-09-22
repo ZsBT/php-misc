@@ -86,7 +86,7 @@ class GoDaddy {
         break;
         
       default:
-        curl_setopt($ch, CURLOPT_POSTFIELDS,  @json_encode([$parms]) );
+        curl_setopt($ch, CURLOPT_POSTFIELDS,  @json_encode($parms) );
     }
     
     curl_setopt($ch, CURLOPT_URL, $url);
