@@ -42,10 +42,12 @@ class PDO extends \PDO {
     public function __construct($dsn, $username=NULL, $password=NULL, $options=[] ){
         // use persistent connection if not specified
         if(!isset($options[PDO::ATTR_PERSISTENT]))$options[PDO::ATTR_PERSISTENT] = true;
-        
+        $this->dsn = $dsn;
+        $this->driver = strstr($dsn, ":", true);
         parent::__construct($dsn, $username, $password, $options);
         self::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
     }
+    private $dsn,$driver;
 
 
     private function prep($sql){	/* tests errors in statement. drops error on failure */
@@ -89,11 +91,35 @@ class PDO extends \PDO {
     
 
     public function iterate($sql, $function, $mode=PDO::FETCH_OBJ){	/* pass every record object as parameter to $function  */
+        switch($this->driver){
+            case "pgsql": return $this->iterate_cursor($sql, $function, $mode);
+            case "mysql": $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        }
+        
         $st = $this->prepexec($sql);
         while($fo = $st->fetch($mode))
             if(false===$function($fo))return false;
         return true;
     }
+    
+    
+    public function iterate_cursor($sql, $function, $mode=PDO::FETCH_OBJ){	/* use cursor for huge resultsets */
+        $cursor = "cur".uniqid();
+        $cursorSql = "declare $cursor cursor for $sql";
+        $this->begin();
+        
+        $curStmt = $this->prepare($cursorSql);
+        $curStmt->execute();
+        
+        $inStmt = $this->prepare("fetch 1 from $cursor");
+        
+        $i=0;
+        while($inStmt->execute() && ($fo=$inStmt->fetch($mode)) && (false!==$function($fo)) )
+            $i++;
+        
+        return $this->commit();
+    }
+    
     
     
     public function insert($table, $datArr){  /* insert data to a table. datArr is a mapped array. no BLOB support */
