@@ -35,12 +35,13 @@ abstract class Cache {
   }
 
   
-  public static function get($key)		// read from cache file
+  public static function get($key,$timeout=null)		// read from cache file
   {
+    if(!$timeout)$timeout=self::$TIMEOUT;
     $fn=self::fnbykey($key);
     if(!file_exists($fn))return NULL;
     
-    if( (time() - filemtime($fn)) > self::$TIMEOUT){
+    if( (time() - filemtime($fn)) > $timeout){
       unlink($fn);
       return NULL;
     }
