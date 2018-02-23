@@ -1,6 +1,6 @@
 <?php /*
 
-	(c) Zsombor's simple cache class with methods set and get				
+	(c) Zsombor's simple abstract cache class with methods set and get				
 	
   Variables
   
