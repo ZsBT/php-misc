@@ -18,13 +18,13 @@ class oCache {
     
   /**
     the constructor
-    $DIR	the writable directory, exclusively used by this cache. if not exists, we'll try to create it
     $TTL	(time-to-leave) lifetime, in seconds. 
+    $DIR	the writable directory, exclusively used by this cache. if not exists, we'll try to create it
     $PREFIX	optional name prefix for the individual files
   
   **/
   
-  function __construct($DIR="/tmp/oCache",$TTL=3600,$PREFIX="x"){
+  function __construct($TTL=3600,$DIR="/tmp/oCache",$PREFIX="x"){
     $this->DIR = $DIR;
     $this->PREFIX=$PREFIX;
     $this->TTL = $TTL;
@@ -59,6 +59,13 @@ class oCache {
     return NULL;
   }
   
+  
+  public function expire($key){	// make cache object expired
+    $ob = @unserialize(@file_get_contents($this->fnbykey($key)));
+    $ob->Expiry = time()-1;
+    return file_put_contents($this->fnbykey($key), @serialize($ob) );
+  }
+  
 
   public function del($key){	// delete from cache
     return unlink($this->fnbykey($key));
@@ -89,7 +96,7 @@ class oCacheObject {
     $this->Created = time();
     $this->Key = &$Key;
     $this->Expiry = time()+$TTL;
-    $this->Data = &$Data;
+    $this->Data = $Data;
   }
   
 }
