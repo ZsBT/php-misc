@@ -24,10 +24,11 @@ class oCache {
   
   **/
   
-  function __construct($DIR="/tmp/oCache",$TTL=3600,$PREFIX="x"){
+  function __construct($DIR=NULL,$TTL,$PREFIX="x"){
+    if(!$DIR)$DIR = sys_get_temp_dir()."/oCache";
     $this->DIR = $DIR;
     $this->PREFIX=$PREFIX;
-    $this->TTL = $TTL;
+    $this->TTL = ( $TTL ? $TTL : 600) ;
     
     if(!file_exists($this->DIR) && !mkdir($this->DIR,0775,true))
       throw new oCacheException("Cannot create directory {$this->DIR}", 510);
@@ -53,6 +54,7 @@ class oCache {
     
     if($callable){
       $data = $callable($key,$ob);
+      if( ($data===NULL) && $ob )return $ob->Data;	// return expired object if $callable fails
       $this->put($key,$data);
       return $data;
     }
