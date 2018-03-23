@@ -24,12 +24,8 @@ class oCache {
   
   **/
   
-<<<<<<< HEAD
   function __construct($DIR=NULL,$TTL,$PREFIX="x"){
     if(!$DIR)$DIR = sys_get_temp_dir()."/oCache";
-=======
-  function __construct($TTL=3600,$DIR="/tmp/oCache",$PREFIX="x"){
->>>>>>> 0f7ed80d57b794c9909c4cc466dacdf8f5d470fd
     $this->DIR = $DIR;
     $this->PREFIX=$PREFIX;
     $this->TTL = ( $TTL ? $TTL : 600) ;
