@@ -24,6 +24,8 @@ class oCache {
   
   **/
   
+  
+  
   function __construct($DIR=NULL,$TTL,$PREFIX="x"){
     if(!$DIR)$DIR = sys_get_temp_dir()."/oCache";
     $this->DIR = $DIR;
