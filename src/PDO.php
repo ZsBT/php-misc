@@ -154,10 +154,15 @@ class PDO extends \PDO {
                 $st->bindParam(":{$key}{$i}", $tmp=$value );
         }
 
-        if(!$st->execute())
-            return false;
         
-        return ($ID=$this->lastInsertId())? $ID:true ;
+        $retid = $st->execute();
+        
+        if($returnCol){
+            $retval= $st->fetchAll();
+            if ( $retval && $retval[0] && $retval[0][0] ) $retid = $retval[0][0];
+        }
+        
+        return $retid;
     }
 
 
