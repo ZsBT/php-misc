@@ -44,29 +44,15 @@ class PDO extends \PDO {
         if(!isset($options[PDO::ATTR_PERSISTENT]))$options[PDO::ATTR_PERSISTENT] = true;
         $this->dsn = $dsn;
         $this->driver = strstr($dsn, ":", true);
-        parent::__construct($dsn, $username, $password, $options);
+        parent::__construct($dsn, $this->user=$username, $this->pass=$password, $this->opts=$options);
         self::setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
     }
-    private $dsn,$driver;
-
-
-    private function prep($sql){	/* tests errors in statement. drops error on failure */
-        if(!$st = $this->prepare($sql))throw new \Exception(
-            "Prepare statement error: ".json_encode($this->errorInfo())." SQL=[$sql]"
-        );
-        return $st;
-    }
+    private $dsn,$driver,$user,$pass,$opts;
     
     
+
     public function begin(){	/* alias for beginTransaction() */
         return $this->beginTransaction();
-    }
-
-
-    private function prepexec($sql){	/* safely prepares and executes statement */
-        $st = $this->prep($sql);
-        $st->execute();
-        return $st;
     }
 
 
@@ -92,13 +78,13 @@ class PDO extends \PDO {
 
     public function iterate($sql, $function, $mode=PDO::FETCH_OBJ){	/* pass every record object as parameter to $function  */
         switch($this->driver){
-            case "pgsql": return $this->iterate_cursor($sql, $function, $mode);
+#            case "pgsql": return $this->iterate_cursor($sql, $function, $mode);	# FIXME buggy when using multiple cursors
             case "mysql": $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         }
         
         $st = $this->prepexec($sql);
         while($fo = $st->fetch($mode))
-            if(false===$function($fo))return false;
+            if(false===$function($fo,$this))return false;
         return true;
     }
     
@@ -114,7 +100,7 @@ class PDO extends \PDO {
         $inStmt = $this->prepare("fetch 1 from $cursor");
         
         $i=0;
-        while($inStmt->execute() && ($fo=$inStmt->fetch($mode)) && (false!==$function($fo)) )
+        while($inStmt->execute() && ($fo=$inStmt->fetch($mode)) && (false!==$function($fo,$this)) )
             $i++;
         
         return $this->commit();
@@ -122,9 +108,10 @@ class PDO extends \PDO {
     
     
     
-    public function insert($table, $datArr){  /* insert data to a table. datArr is a mapped array. no BLOB support */
+    public function insert($table, $datArr, $returnCol=NULL){  /* insert data to a table. datArr is a mapped array. no BLOB support */
         $keys = @array_keys($datArr);
         $sql = @sprintf("insert into $table (\"%s\") values (:%s)", implode('","',$keys), implode(",:",$keys) );
+        if($returnCol)$sql.=" returning $returnCol";
 
         $st = $this->prep($sql);
         
@@ -132,8 +119,14 @@ class PDO extends \PDO {
         foreach($datArr as $key => $value)
             $st->bindParam(":$key", $tmp=$value );
         
-        if(!$st->execute())return false;
-        return ($ID=$this->lastInsertId())? $ID:true ;
+        $retid = $st->execute();
+        
+        if($returnCol){
+            $retval= $st->fetchAll();
+            if ( $retval && $retval[0] && $retval[0][0] ) $retid = $retval[0][0];
+        }
+        
+        return $retid;
     }
 
 
@@ -154,15 +147,10 @@ class PDO extends \PDO {
                 $st->bindParam(":{$key}{$i}", $tmp=$value );
         }
 
+        if(!$st->execute())
+            return false;
         
-        $retid = $st->execute();
-        
-        if($returnCol){
-            $retval= $st->fetchAll();
-            if ( $retval && $retval[0] && $retval[0][0] ) $retid = $retval[0][0];
-        }
-        
-        return $retid;
+        return ($ID=$this->lastInsertId())? $ID:true ;
     }
 
 
@@ -191,6 +179,36 @@ class PDO extends \PDO {
      public function lastError(){      /* return last error message */
          return $this->errorInfo()[2];
      }
+
+
+
+    public function insertupdate($table, $datArr, $cond, $returnCol=NULL){  /* update row in a table if exists, else insert */
+        if($this->oneValue("select count(1) from $table where $cond"))
+            return $this->update($table, $datArr, $cond);
+        else
+            return $this->insert($table, $datArr, $returnCol);
+    }
+
+
+
+
+    private function prep($sql){	/* tests errors in statement. drops error on failure */
+        $this->lastSQL = $sql;
+        if(!$st = $this->prepare($sql))throw new \Exception(
+            "Prepare statement error: ".json_encode($this->errorInfo())." SQL=[$sql]"
+        );
+        return $st;
+    }
+    public $lastSQL;
+    
+    private function prepexec($sql){	/* safely prepares and executes statement */
+        $st = $this->prep($sql);
+        $st->execute();
+        return $st;
+    }
+
+
+
 
 }
 ?>
