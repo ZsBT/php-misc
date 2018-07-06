@@ -114,11 +114,7 @@ class PDO extends \PDO {
         if($returnCol)$sql.=" returning $returnCol";
 
         $st = $this->prep($sql);
-        
-        // bind parameters
-        foreach($datArr as $key => $value)
-            $st->bindParam(":$key", $tmp=$value );
-        
+        $this->__bindParam($st, $datArr);
         $retid = $st->execute();
         
         if($returnCol){
@@ -127,6 +123,16 @@ class PDO extends \PDO {
         }
         
         return $retid;
+    }
+
+
+    private function __bindParam(&$st, &$datArr){
+        foreach($datArr as $key => $value){
+            $tmp = $value;
+            $st->bindParam(":$key", $tmp );
+            unset($tmp);
+        }
+        return $st;
     }
 
 
@@ -140,13 +146,13 @@ class PDO extends \PDO {
         $sql.= "(".implode("), (",$valA).")";
         
         $st = $this->prep($sql);
-        
-        // bind parameters
-        foreach($datArrArr as $i=>$datArr){
-            foreach($datArr as $key => $value)
-                $st->bindParam(":{$key}{$i}", $tmp=$value );
+        foreach($datArrArr as $i=>$datArr)foreach($datArr as $key => $value){
+            $tmp = $value;
+            $st->bindParam(":{$key}{$i}", $tmp );
+            unset($tmp);
         }
-
+                                            
+                                            
         if(!$st->execute())
             return false;
         
@@ -165,11 +171,7 @@ class PDO extends \PDO {
         $sql = @sprintf("update {$table} set %s where {$cond}", implode(",",$sets) );
         
         $st = $this->prep($sql);
-        
-        // bind parameters
-        $tmp=null;
-        foreach($datArr as $key => $value)
-            $st->bindParam(":$key", $tmp=$value);
+        $this->__bindParam($st, $datArr);
         
         if(!$st->execute())return false;
         return $st->rowCount();
